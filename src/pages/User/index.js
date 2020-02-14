@@ -32,6 +32,11 @@ function User({ navigation }) {
       const userParam = navigation.getParam('user');
       setUser(userParam);
       const res = await api.get(`/users/${userParam.login}/starred`);
+
+      if (res.data.length !== 30) {
+        setNoMoreStars(true);
+      }
+
       setStars(res.data);
       setLoading(false);
     };
@@ -44,8 +49,7 @@ function User({ navigation }) {
       const res = await api.get(
         `/users/${user.login}/starred?page=${page + 1}`
       );
-      console.tron.log(res.data.length);
-      if (!res.data || res.data.length === 0) {
+      if (!res.data || res.data.length !== 30) {
         setNoMoreStars(true);
         return;
       }
@@ -77,7 +81,7 @@ function User({ navigation }) {
           onEndReached={loadMoreStars}
           ListFooterComponent={
             noMoreStars ? (
-              <Indicator>No more stars</Indicator>
+              <Indicator>No {stars.length !== 0 && 'more '}stars</Indicator>
             ) : (
               <ActivityIndicator color="#7159c1" />
             )
