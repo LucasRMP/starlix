@@ -16,12 +16,15 @@ import {
   Info,
   Title,
   Author,
+  Indicator,
 } from './styles';
 
 function User({ navigation }) {
   const [stars, setStars] = useState([]);
   const [user, setUser] = useState([]);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [noMoreStars, setNoMoreStars] = useState(false);
 
   useEffect(() => {
     const componentDidMount = async () => {
@@ -34,6 +37,27 @@ function User({ navigation }) {
     };
     componentDidMount();
   }, []);
+
+  const loadMoreStars = async () => {
+    if (noMoreStars) return;
+    try {
+      const res = await api.get(
+        `/users/${user.login}/starred?page=${page + 1}`
+      );
+      console.tron.log(res.data.length);
+      if (!res.data || res.data.length === 0) {
+        setNoMoreStars(true);
+        return;
+      }
+
+      const newStars = [...stars, ...res.data];
+
+      setStars(newStars);
+      setPage(page + 1);
+    } catch (e) {
+      console.tron.error(e);
+    }
+  };
 
   return (
     <Container>
@@ -49,6 +73,15 @@ function User({ navigation }) {
         <Stars
           data={stars}
           keyExtractor={star => String(star.id)}
+          onEndReachedThreshold={0.2}
+          onEndReached={loadMoreStars}
+          ListFooterComponent={
+            noMoreStars ? (
+              <Indicator>No more stars</Indicator>
+            ) : (
+              <ActivityIndicator color="#7159c1" />
+            )
+          }
           renderItem={({ item }) => (
             <Starred>
               <OwnerAvatar source={{ uri: item.owner.avatar_url }} />

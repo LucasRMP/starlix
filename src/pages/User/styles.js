@@ -73,3 +73,10 @@ export const Author = styled.Text`
   color: #666;
   margin-top: 2px;
 `;
+
+export const Indicator = styled.Text`
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  margin-top: 2px;
+`;
