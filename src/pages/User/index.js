@@ -44,7 +44,6 @@ function User({ navigation }) {
         keyExtractor={star => String(star.id)}
         renderItem={({ item }) => (
           <Starred>
-            {console.tron.log(item)}
             <OwnerAvatar source={{ uri: item.owner.avatar_url }} />
             <Info>
               <Title>{item.name}</Title>

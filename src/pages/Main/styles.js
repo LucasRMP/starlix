@@ -39,12 +39,14 @@ export const SubmitButton = styled(RectButton)`
 export const List = styled.FlatList.attrs({
   showsVerticalScrollIndicator: false,
 })`
-  margin-top: 20px;
+  margin-top: 10px;
+  flex-direction: column;
 `;
 
 export const User = styled.View`
   align-items: center;
   margin: 0 20px 30px;
+  min-height: 180px;
 `;
 
 export const Avatar = styled.Image`
@@ -72,14 +74,34 @@ export const Bio = styled.Text.attrs({
   text-align: center;
 `;
 
-export const ProfileButton = styled(RectButton)`
+export const UserActions = styled.View`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   margin-top: 10px;
+`;
+
+export const ProfileButton = styled(RectButton)`
+  flex: 1;
   align-self: stretch;
   border-radius: 4px;
   background: #7159c1;
   justify-content: center;
   align-items: center;
   height: 36px;
+`;
+
+export const RemoveButton = styled(RectButton)`
+  width: 36px;
+  margin-left: 5px;
+  align-self: stretch;
+  border-radius: 4px;
+  background: #ff3232;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  opacity: ${props => (props.loading ? '0.7' : '1')};
 `;
 
 export const ProfileButtonText = styled.Text`

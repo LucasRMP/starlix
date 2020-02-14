@@ -18,12 +18,15 @@ import {
   Bio,
   ProfileButton,
   ProfileButtonText,
+  UserActions,
+  RemoveButton,
 } from './styles';
 
 function Main({ navigation }) {
   const [userInput, setUserInput] = useState('');
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const componentDidMount = async () => {
@@ -53,8 +56,15 @@ function Main({ navigation }) {
     }
 
     const { name, login, bio, avatar_url } = user;
+    const newUser = { name, login, bio, avatar_url };
 
-    setUsers([...users, { name, login, bio, avatar_url }]);
+    if (users.find(u => u.login === newUser.login)) {
+      console.tron.log('Repeated user');
+      setLoading(false);
+      return;
+    }
+
+    setUsers([newUser, ...users]);
     setUserInput('');
     Keyboard.dismiss();
     setLoading(false);
@@ -62,6 +72,12 @@ function Main({ navigation }) {
 
   const handleNavigate = user => {
     navigation.navigate('User', { user });
+  };
+
+  const removeUser = login => {
+    setDeleting(true);
+    setUsers(users.filter(u => u.login !== login));
+    setDeleting(false);
   };
 
   return (
@@ -94,9 +110,18 @@ function Main({ navigation }) {
             <Name>{item.name}</Name>
             <Bio>{item.bio}</Bio>
 
-            <ProfileButton onPress={() => handleNavigate(item)}>
-              <ProfileButtonText>See Profile</ProfileButtonText>
-            </ProfileButton>
+            <UserActions>
+              <ProfileButton onPress={() => handleNavigate(item)}>
+                <ProfileButtonText>See Profile</ProfileButtonText>
+              </ProfileButton>
+
+              <RemoveButton
+                loading={deleting}
+                onPress={() => removeUser(item.login)}
+              >
+                <Icon name="delete" size={20} color="#fff" />
+              </RemoveButton>
+            </UserActions>
           </User>
         )}
       />
