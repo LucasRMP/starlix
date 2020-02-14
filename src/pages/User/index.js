@@ -63,6 +63,11 @@ function User({ navigation }) {
     }
   };
 
+  const handleNavigate = repo => {
+    console.tron.log({ action: 'navigating', repo });
+    navigation.navigate('Repo', { repo });
+  };
+
   return (
     <Container>
       <Header>
@@ -87,7 +92,7 @@ function User({ navigation }) {
             )
           }
           renderItem={({ item }) => (
-            <Starred>
+            <Starred onPress={() => handleNavigate(item)}>
               <OwnerAvatar source={{ uri: item.owner.avatar_url }} />
               <Info>
                 <Title>{item.name}</Title>
@@ -108,6 +113,7 @@ User.navigationOptions = ({ navigation }) => ({
 User.propTypes = {
   navigation: PT.shape({
     getParam: PT.func,
+    navigate: PT.func,
   }).isRequired,
 };
 
