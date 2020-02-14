@@ -48,25 +48,29 @@ function Main({ navigation }) {
       return;
     }
 
-    const { data: user } = await api.get(`/users/${userInput}`);
+    try {
+      const { data: user } = await api.get(`/users/${userInput}`);
 
-    if (!user) {
-      setLoading(false);
-      return;
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      const { name, login, bio, avatar_url } = user;
+      const newUser = { name, login, bio, avatar_url };
+
+      if (users.find(u => u.login === newUser.login)) {
+        console.tron.log('Repeated user');
+        setLoading(false);
+        return;
+      }
+
+      setUsers([newUser, ...users]);
+      setUserInput('');
+      Keyboard.dismiss();
+    } catch (e) {
+      console.tron.error(e);
     }
-
-    const { name, login, bio, avatar_url } = user;
-    const newUser = { name, login, bio, avatar_url };
-
-    if (users.find(u => u.login === newUser.login)) {
-      console.tron.log('Repeated user');
-      setLoading(false);
-      return;
-    }
-
-    setUsers([newUser, ...users]);
-    setUserInput('');
-    Keyboard.dismiss();
     setLoading(false);
   };
 
