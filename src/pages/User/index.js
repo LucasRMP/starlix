@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, RefreshControl } from 'react-native';
 import PT from 'prop-types';
 
 import api from '../../services/api';
@@ -24,6 +24,7 @@ function User({ navigation }) {
   const [user, setUser] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [noMoreStars, setNoMoreStars] = useState(false);
 
   useEffect(() => {
@@ -40,7 +41,12 @@ function User({ navigation }) {
       setStars(res.data);
       setLoading(false);
     };
-    componentDidMount();
+    try {
+      componentDidMount();
+    } catch (e) {
+      console.tron.error(e);
+      setLoading(false);
+    }
   }, []);
 
   const loadMoreStars = async () => {
@@ -63,8 +69,25 @@ function User({ navigation }) {
     }
   };
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const userParam = navigation.getParam('user');
+      setUser(userParam);
+      const res = await api.get(`/users/${userParam.login}/starred`);
+
+      if (res.data.length !== 30) {
+        setNoMoreStars(true);
+      }
+
+      setStars(res.data);
+    } catch (e) {
+      console.tron.error(e);
+    }
+    setRefreshing(false);
+  };
+
   const handleNavigate = repo => {
-    console.tron.log({ action: 'navigating', repo });
     navigation.navigate('Repo', { repo });
   };
 
@@ -84,6 +107,13 @@ function User({ navigation }) {
           keyExtractor={star => String(star.id)}
           onEndReachedThreshold={0.2}
           onEndReached={loadMoreStars}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              colors={['#7159c1']}
+            />
+          }
           ListFooterComponent={
             noMoreStars ? (
               <Indicator>No {stars.length !== 0 && 'more '}stars</Indicator>
