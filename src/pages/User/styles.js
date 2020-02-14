@@ -7,20 +7,20 @@ export const Container = styled.View`
 
 export const Header = styled.View`
   align-items: center;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   border-bottom-width: 1px;
   border-color: #eee;
 `;
 
 export const Avatar = styled.Image`
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50px;
   background: #eee;
 `;
 
 export const Name = styled.Text`
-  font-size: 20px;
+  font-size: 18px;
   color: #333;
   font-weight: bold;
   margin-top: 10px;
@@ -28,7 +28,7 @@ export const Name = styled.Text`
 `;
 
 export const Bio = styled.Text`
-  font-size: 14px;
+  font-size: 13px;
   line-height: 18px;
   color: #999;
   margin-top: 5px;

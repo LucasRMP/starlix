@@ -57,7 +57,7 @@ function User({ navigation }) {
 }
 
 User.navigationOptions = ({ navigation }) => ({
-  title: navigation.getParam('user').name,
+  title: navigation.getParam('user').login,
 });
 
 User.propTypes = {
